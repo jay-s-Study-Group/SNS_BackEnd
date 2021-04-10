@@ -20,7 +20,11 @@ class Config:
 
 @dataclass
 class LocalConfig(Config):
-    PROJ_RELOAD=True
+    DATABASE_HOST = "yej-db.civiefqva2ca.ap-northeast-2.rds.amazonaws.com"
+    DATABASE_PASSWD = "0128gksqls"
+    DATABASE_USER = "admin"
+    DATABASE_PORT = 3306
+    PROJ_RELOAD = True
     TRUSTED_HOSTS = ["*"]
     ALLOW_SITE = ["*"]
     DEBUG: bool = True
@@ -28,7 +32,11 @@ class LocalConfig(Config):
 
 @dataclass
 class ProdConfig(Config):
-    PROJ_RELOAD=False
+    DATABASE_HOST = ""
+    DATABASE_PASSWD = ""
+    DATABASE_USER = ""
+    DATABASE_PORT = 3306
+    PROJ_RELOAD = False
     TRUSTED_HOSTS = ["*"]
     ALLOW_SITE = ["*"]
 
