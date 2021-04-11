@@ -33,8 +33,8 @@ class JSONField(pw.TextField):
         return pw.Expression(self, pw.OP.ILIKE, value)
 
 
-class MySQLModel(Model):
+class MySQLModel(pw.Model):
     """A base model that will use our MySQL database"""
 
     class Meta:
-        database = skyhub
+        database = conn
