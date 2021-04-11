@@ -18,6 +18,21 @@ def get_random_alphabet(length=12) -> str:
     return "".join(secrets.choice(ALPHABET) for i in range(length))
 
 
+def make_password(raw_password, salt=None, algorithm="default") -> str:
+    hasher = get_hasher(algorithm)
+    if salt is None:
+        salt = hasher.generate_salt()
+
+    encoded = hasher.encode(raw_password, salt)
+    return encoded
+
+
+def check_password(password, encoded, preferred="default") -> bool:
+    hasher = get_hasher(preferred)
+    is_correct = hasher.verify(password, encoded)
+    return is_correct
+
+
 class BasePasswordHasher:
     algorithm = None
 
