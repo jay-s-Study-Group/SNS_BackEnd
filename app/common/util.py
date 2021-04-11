@@ -17,16 +17,16 @@ class Config:
     DEBUG: bool = False
     TEST_MODE: bool = False
     DB_URL: str = environ.get(
-        "DB_URL", "mysql+pymysql://travis@localhost/notification_api?charset=utf8mb4"
+        "DEFAULT_DB_URL", "mysql+pymysql://travis@localhost/notification_api?charset=utf8mb4"
     )
 
 
 @dataclass
 class LocalConfig(Config):
-    DATABASE_HOST = "yej-db.civiefqva2ca.ap-northeast-2.rds.amazonaws.com"
-    DATABASE_PASSWD = "0128gksqls"
-    DATABASE_USER = "admin"
-    DATABASE_PORT = 3306
+    DATABASE_HOST = environ.get("LOCAL_DB_HOST", "localhost")
+    DATABASE_PASSWD = environ.get("LOCAL_DB_PASSWORD", "")
+    DATABASE_USER = environ.get("LOCAL_DB_USER", "root")
+    DATABASE_PORT = environ.get("LOCAL_DB_PORT", 3306)
     PROJ_RELOAD = True
     TRUSTED_HOSTS = ["*"]
     ALLOW_SITE = ["*"]
@@ -35,10 +35,10 @@ class LocalConfig(Config):
 
 @dataclass
 class ProdConfig(Config):
-    DATABASE_HOST = ""
-    DATABASE_PASSWD = ""
-    DATABASE_USER = ""
-    DATABASE_PORT = 3306
+    DATABASE_HOST = environ.get("PROD_DB_HOST", "localhost")
+    DATABASE_PASSWD = environ.get("PROD_DB_PASSWORD", "")
+    DATABASE_USER = environ.get("PROD_DB_USER", "root")
+    DATABASE_PORT = environ.get("PROD_DB_PORT", 3306)
     PROJ_RELOAD = False
     TRUSTED_HOSTS = ["*"]
     ALLOW_SITE = ["*"]
@@ -46,7 +46,9 @@ class ProdConfig(Config):
 
 @dataclass
 class TestConfig(Config):
-    DB_URL: str = "mysql+pymysql://travis@localhost/notification_test?charset=utf8mb4"
+    DB_URL: str = environ.get(
+        "TEST_DB_URL", "mysql+pymysql://travis@localhost/notification_api?charset=utf8mb4"
+    )
     TRUSTED_HOSTS = ["*"]
     ALLOW_SITE = ["*"]
     TEST_MODE: bool = True
