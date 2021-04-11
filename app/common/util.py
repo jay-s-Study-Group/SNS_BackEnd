@@ -10,12 +10,15 @@ class Config:
     """
     기본 Configuration
     """
+
     BASE_DIR: str = base_dir
     DB_POOL_RECYCLE: int = 900
     DB_ECHO: bool = True
     DEBUG: bool = False
     TEST_MODE: bool = False
-    DB_URL: str = environ.get("DB_URL", "mysql+pymysql://travis@localhost/notification_api?charset=utf8mb4")
+    DB_URL: str = environ.get(
+        "DB_URL", "mysql+pymysql://travis@localhost/notification_api?charset=utf8mb4"
+    )
 
 
 @dataclass
