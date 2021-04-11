@@ -38,3 +38,12 @@ class MySQLModel(pw.Model):
 
     class Meta:
         database = conn
+
+
+def get_base_model():
+    """
+    get BaseModel for inheriting other models
+    it could return MySQLModel, PostgreSQLModel, etc.
+    :rtype: peewee.ModelBase
+    """
+    return MySQLModel
