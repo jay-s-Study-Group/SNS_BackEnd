@@ -16,13 +16,13 @@ class Config:
     DB_ECHO: bool = True
     DEBUG: bool = False
     TEST_MODE: bool = False
-    DB_URL: str = environ.get(
-        "DEFAULT_DB_URL", "mysql+pymysql://travis@localhost/notification_api?charset=utf8mb4"
-    )
 
 
 @dataclass
 class LocalConfig(Config):
+    DB_URL: str = environ.get(
+        "LOCAL_DB_URL", "mysql+pymysql://root@localhost/dbname?charset=utf8mb4"
+    )
     DATABASE_HOST = environ.get("LOCAL_DB_HOST", "localhost")
     DATABASE_PASSWD = environ.get("LOCAL_DB_PASSWORD", "")
     DATABASE_USER = environ.get("LOCAL_DB_USER", "root")
@@ -35,6 +35,9 @@ class LocalConfig(Config):
 
 @dataclass
 class ProdConfig(Config):
+    DB_URL: str = environ.get(
+        "PROD_DB_URL", "mysql+pymysql://root@localhost/dbname?charset=utf8mb4"
+    )
     DATABASE_HOST = environ.get("PROD_DB_HOST", "localhost")
     DATABASE_PASSWD = environ.get("PROD_DB_PASSWORD", "")
     DATABASE_USER = environ.get("PROD_DB_USER", "root")
