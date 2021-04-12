@@ -1,12 +1,12 @@
 import peewee as pw
-from app.databases.session import conn
+from app.databases.session import db
 
 
 class MySQLModel(pw.Model):
     """A base model that will use our MySQL database"""
 
     class Meta:
-        database = conn
+        database = db.session
 
 
 def get_base_model():
