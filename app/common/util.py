@@ -1,8 +1,10 @@
 from dataclasses import dataclass
 from os import path, environ
 from typing import List
+from dotenv import load_dotenv
 
 base_dir = path.dirname(path.dirname(path.dirname(path.abspath(__file__))))
+load_dotenv()
 
 
 @dataclass
@@ -65,5 +67,7 @@ def conf():
     환경 불러오기
     :return:
     """
+
     config = dict(prod=ProdConfig, local=LocalConfig, test=TestConfig)
+    print(config[environ.get("API_ENV", "local")]().DATABASE_HOST)
     return config[environ.get("API_ENV", "local")]()
