@@ -23,10 +23,11 @@ class LocalConfig(Config):
     DB_URL: str = environ.get(
         "LOCAL_DB_URL", "mysql+pymysql://root@localhost/dbname?charset=utf8mb4"
     )
+    DATABASE_NAME = environ.get("LOCAL_DB_NAME", "test")
     DATABASE_HOST = environ.get("LOCAL_DB_HOST", "localhost")
     DATABASE_PASSWD = environ.get("LOCAL_DB_PASSWORD", "")
     DATABASE_USER = environ.get("LOCAL_DB_USER", "root")
-    DATABASE_PORT = environ.get("LOCAL_DB_PORT", 3306)
+    DATABASE_PORT = int(environ.get("LOCAL_DB_PORT", 3306))
     PROJ_RELOAD = True
     TRUSTED_HOSTS = ["*"]
     ALLOW_SITE = ["*"]
@@ -38,10 +39,11 @@ class ProdConfig(Config):
     DB_URL: str = environ.get(
         "PROD_DB_URL", "mysql+pymysql://root@localhost/dbname?charset=utf8mb4"
     )
+    DATABASE_NAME = environ.get("PROD_DB_NAME", "test")
     DATABASE_HOST = environ.get("PROD_DB_HOST", "localhost")
     DATABASE_PASSWD = environ.get("PROD_DB_PASSWORD", "")
     DATABASE_USER = environ.get("PROD_DB_USER", "root")
-    DATABASE_PORT = environ.get("PROD_DB_PORT", 3306)
+    DATABASE_PORT = int(environ.get("PROD_DB_PORT", 3306))
     PROJ_RELOAD = False
     TRUSTED_HOSTS = ["*"]
     ALLOW_SITE = ["*"]
@@ -50,7 +52,8 @@ class ProdConfig(Config):
 @dataclass
 class TestConfig(Config):
     DB_URL: str = environ.get(
-        "TEST_DB_URL", "mysql+pymysql://travis@localhost/notification_api?charset=utf8mb4"
+        "TEST_DB_URL",
+        "mysql+pymysql://travis@localhost/notification_api?charset=utf8mb4",
     )
     TRUSTED_HOSTS = ["*"]
     ALLOW_SITE = ["*"]
