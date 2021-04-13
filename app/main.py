@@ -3,6 +3,7 @@ from fastapi import FastAPI
 
 from app.common.util import conf
 from dotenv import load_dotenv
+from app.api import api_router
 
 
 def create_app():
@@ -14,7 +15,7 @@ def create_app():
     config = conf()
 
     app = FastAPI()
-
+    app.include_router(api_router)
     return app
 
 
