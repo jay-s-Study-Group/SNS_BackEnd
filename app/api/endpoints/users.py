@@ -7,8 +7,8 @@ router = APIRouter()
 
 @router.get("/{user_id}", response_model=GetUserSchema)
 def get_user(user_id: int):
-    user = get_user_by_id(user_id=user_id)
-    return user
+    user_instance = get_user_by_id(user_id=user_id)
+    return user_instance
 
 
 @router.post("/", response_model=GetUserSchema)
