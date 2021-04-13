@@ -9,10 +9,10 @@ class MySQLModel(pw.Model):
         database = db.session
 
 
-def get_base_model():
+def get_mysql_model():
     """
     get BaseModel for inheriting other models
-    it could return MySQLModel, PostgreSQLModel, etc.
+    it could return MySQLModel
     :rtype: peewee.ModelBase
     """
     return MySQLModel
