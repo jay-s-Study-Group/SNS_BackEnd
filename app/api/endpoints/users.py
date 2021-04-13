@@ -1,15 +1,16 @@
 from fastapi import APIRouter
-from app.schemas import User, UserCreate
+from app.schemas import GetUserSchema, CreateUserSchema
 from app.crud import get_user_by_id, create_user
 
 router = APIRouter()
 
 
-@router.get("/{user_id}", response_model=User)
+@router.get("/{user_id}", response_model=GetUserSchema)
 def get_user(user_id: int):
-    return get_user_by_id(user_id=user_id)
+    user = get_user_by_id(user_id=user_id)
+    return user
 
 
-@router.post("/", response_model=User)
-def create_user(user: UserCreate):
-    return create_user(**user)
+@router.post("/", response_model=GetUserSchema)
+def register(user: CreateUserSchema):
+    return create_user(user)

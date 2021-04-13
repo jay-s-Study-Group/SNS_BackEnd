@@ -1,11 +1,11 @@
 from app.models import User
-from app.schemas import UserCreate
+from app.schemas import CreateUserSchema
 from app.common.hashers import make_password
 from app.databases.session import db
 
 
 @db.db_connect
-def create_user(user: UserCreate):
+def create_user(user: CreateUserSchema):
     hashed_password = make_password(user.password)
     user_instance = User(email=user.email, password=hashed_password)
     user_instance.save()
@@ -14,4 +14,5 @@ def create_user(user: UserCreate):
 
 @db.db_connect
 def get_user_by_id(user_id: int):
-    return User.filter(User.id == user_id).first()
+    user_instance = User.filter(User.id == user_id).first()
+    return user_instance
