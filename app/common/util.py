@@ -67,7 +67,5 @@ def conf():
     환경 불러오기
     :return:
     """
-
     config = dict(prod=ProdConfig, local=LocalConfig, test=TestConfig)
-    print(config[environ.get("API_ENV", "local")]().DATABASE_HOST)
     return config[environ.get("API_ENV", "local")]()
