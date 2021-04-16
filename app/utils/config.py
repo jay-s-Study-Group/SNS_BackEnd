@@ -67,7 +67,7 @@ class TestConfig(Config):
     TEST_MODE: bool = True
 
 
-def conf():
+def load_config():
     """
     환경 불러오기
     :return:
