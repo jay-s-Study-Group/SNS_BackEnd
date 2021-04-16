@@ -1,22 +1,22 @@
 import requests
-from app.common.util import conf
+from app.utils.config import load_config
 
-SETTINGS = conf()
+CONFIG = load_config()
 
 
 class BaseSocialAuthentication:
     def get_access_token(self, code):
-        raise NotImplementedError()  # TODO: Add error message
+        raise NotImplementedError()  # TODO: Add  error message
 
 
 class KakaoSocialAuthentication(BaseSocialAuthentication):
     def __init__(self):
-        self.redirect_uri = conf().KAKAO_OAUTH_REDIRECT_URI
+        self.redirect_uri = CONFIG.KAKAO_OAUTH_REDIRECT_URI
 
     def get_access_token(self, code):
         data = {
             "grant_type": "authorization_code",
-            "client_id": SETTINGS.KAKAO_API_CLIENT_ID,
+            "client_id": CONFIG.KAKAO_API_CLIENT_ID,
             "redirect_uri": self.redirect_uri,
             "code": code,
         }

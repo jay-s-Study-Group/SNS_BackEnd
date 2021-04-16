@@ -1,16 +1,18 @@
 import peewee as pw
-from app.common.util import conf
+from app.utils.config import load_config
 import functools
+
+CONFIG = load_config()
 
 
 class PeeweeDBConnection:
     def __init__(self):
         self._session = pw.MySQLDatabase(
-            database=conf().DATABASE_NAME,
-            host=conf().DATABASE_HOST,
-            port=conf().DATABASE_PORT,
-            user=conf().DATABASE_USER,
-            passwd=conf().DATABASE_PASSWD,
+            database=CONFIG.DATABASE_NAME,
+            host=CONFIG.DATABASE_HOST,
+            port=CONFIG.DATABASE_PORT,
+            user=CONFIG.DATABASE_USER,
+            passwd=CONFIG.DATABASE_PASSWD,
         )
 
     @property

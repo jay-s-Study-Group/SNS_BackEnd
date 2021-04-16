@@ -1,6 +1,6 @@
 from app.models import User
 from app.schemas import CreateUserSchema
-from app.common.hashers import make_password
+from app.utils.hashers import make_password
 from app.databases.session import db
 
 

@@ -1,7 +1,9 @@
 import uvicorn
 from fastapi import FastAPI
-from app.common.util import conf
+from app.utils.config import load_config
 from app.api import api_router
+
+CONFIG = load_config()
 
 
 def create_app():
@@ -10,8 +12,6 @@ def create_app():
     :return:
     fastApi App
     """
-    config = conf()
-
     app = FastAPI()
     app.include_router(api_router)
     return app
@@ -23,6 +23,6 @@ app = create_app()
 if __name__ == "__main__":
     uvicorn.run(
         "main:app",
-        port=conf().WEB_SERVER_PORT,
-        reload=conf().PROJ_RELOAD,
+        port=CONFIG.WEB_SERVER_PORT,
+        reload=CONFIG.PROJ_RELOAD,
     )

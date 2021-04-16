@@ -1,8 +1,8 @@
 from fastapi import APIRouter
-from app.common.authentication import KakaoSocialAuthentication
-from app.common.util import conf
+from app.utils.authentication import KakaoSocialAuthentication
+from app.utils.config import load_config
 
-SETTINGS = conf()
+SETTINGS = load_config()
 
 router = APIRouter()
 
