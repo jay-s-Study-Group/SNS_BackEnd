@@ -16,3 +16,9 @@ def create_user(user: CreateUserSchema):
 def get_user_by_id(user_id: int):
     user_instance = User.filter(User.id == user_id).first()
     return user_instance
+
+
+@db.db_connect
+def get_user_by_email(email: str):
+    user_instance = User.filter(User.email == email).first()
+    return user_instance
