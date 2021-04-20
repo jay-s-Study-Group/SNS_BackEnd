@@ -18,9 +18,11 @@ class Config:
     DB_ECHO: bool = True
     DEBUG: bool = False
     TEST_MODE: bool = False
+    JWT_SECRET_KEY: str = environ.get("JWT_SECRET_KEY", "thisissecretkey!@#$")
+    JWT_ALGORITHM: str = environ.get("JWT_ALGORITHM", "HS256")
     KAKAO_API_CLIENT_ID: str = environ.get("KAKAO_API_CLIENT_ID")
     KAKAO_OAUTH_REDIRECT_URI: str = environ.get(
-        "KAKAO_OAUTH_REDIRECT_URI", "http://127.0.0.1:3052/social-auth/kakao-login"
+        "KAKAO_OAUTH_REDIRECT_URI", "http://127.0.0.1:3052/sns/kakao/access-token"
     )
     WEB_SERVER_PORT: int = int(environ.get("WEB_SERVER_PORT", 3052))
 
