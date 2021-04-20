@@ -8,6 +8,7 @@ from app.utils.authentication import (
 )
 from app.utils.config import load_config
 from app.crud.sns import get_user_by_sns_service_id
+from app.models.users import SocialAuth
 
 SETTINGS = load_config()
 
@@ -33,16 +34,20 @@ def get_current_user(token: str):  # TODO
     pass
 
 
-def get_kakao_user_info(access_token: str):  # TODO
+def get_kakao_sns_service_id(access_token: str):  # TODO
     pass
 
 
 @router.get("/kakao/connect")
-def connect_user_to_kakao(  # TODO
-    user=Depends(get_current_user), sns_user=Depends(get_kakao_user_info)
+def connect_user_to_kakao(
+    user=Depends(get_current_user), sns_service_id=Depends(get_kakao_user_info)
 ):
-    # TODO : SocialAuth를 user id, platform, sns_service_id 와 함께 생성
-    return
+    social_auth_instance = SocialAuth(
+        platform="kakao", sns_service_id=sns_service_id, user=user
+    )
+    social_auth_instance.save()
+
+    return social_auth_instance
 
 
 @router.get("/kakao/login")
