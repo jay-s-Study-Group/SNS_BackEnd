@@ -1,10 +1,10 @@
-import peewee
-from .base import get_base_model
+import peewee as pw
+from .base import get_mysql_model
 
-BaseModel = get_base_model()
+MySQLModel = get_mysql_model()
 
 
-class User(BaseModel):
-    email = peewee.CharField(max_length=256, unique=True)
-    password = peewee.CharField(max_length=256)
-    is_active = peewee.BooleanField(default=False)
+class User(MySQLModel):
+    email = pw.CharField(max_length=256, unique=True)
+    password = pw.CharField(max_length=256)
+    is_active = pw.BooleanField(default=False)

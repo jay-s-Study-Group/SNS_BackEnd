@@ -1,8 +1,10 @@
 from dataclasses import dataclass
 from os import path, environ
 from typing import List
+from dotenv import load_dotenv
 
 base_dir = path.dirname(path.dirname(path.dirname(path.abspath(__file__))))
+load_dotenv(verbose=True)
 
 
 @dataclass
@@ -16,6 +18,11 @@ class Config:
     DB_ECHO: bool = True
     DEBUG: bool = False
     TEST_MODE: bool = False
+    KAKAO_API_CLIENT_ID: str = environ.get("KAKAO_API_CLIENT_ID")
+    KAKAO_OAUTH_REDIRECT_URI: str = environ.get(
+        "KAKAO_OAUTH_REDIRECT_URI", "http://127.0.0.1:3052/social-auth/kakao-login"
+    )
+    WEB_SERVER_PORT: int = int(environ.get("WEB_SERVER_PORT", 3052))
 
 
 @dataclass
@@ -60,7 +67,7 @@ class TestConfig(Config):
     TEST_MODE: bool = True
 
 
-def conf():
+def load_config():
     """
     환경 불러오기
     :return:

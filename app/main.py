@@ -1,9 +1,9 @@
 import uvicorn
 from fastapi import FastAPI
-
-from app.common.util import conf
-from dotenv import load_dotenv
+from app.utils.config import load_config
 from app.api import api_router
+
+CONFIG = load_config()
 
 
 def create_app():
@@ -12,8 +12,6 @@ def create_app():
     :return:
     fastApi App
     """
-    config = conf()
-
     app = FastAPI()
     app.include_router(api_router)
     return app
@@ -21,6 +19,10 @@ def create_app():
 
 app = create_app()
 
+
 if __name__ == "__main__":
-    load_dotenv(verbose=True)
-    uvicorn.run("main:app", host="0.0.0.0", port=3052, reload=conf().PROJ_RELOAD)
+    uvicorn.run(
+        "main:app",
+        port=CONFIG.WEB_SERVER_PORT,
+        reload=CONFIG.PROJ_RELOAD,
+    )
