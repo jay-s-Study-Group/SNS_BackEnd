@@ -37,11 +37,15 @@ def kakao_oauth_redirect(code: str) -> Any:
 
 
 def get_current_user(authorization: str = Header(None)):
-    pass
+    if token := authorization.split()[0] not in ("jwt", "JWT"):
+        raise Exception()  # TODO 직접 만든 Exception 핸들러로 변경
+    decoded_payload = jwt_decode_handler(token)
+    user_instance = get_user_by_email(decoded_payload["email"])
+    return user_instance
 
 
 def get_kakao_sns_service_id(sns_service_info: SNSServiceInfoSchema):
-    pass
+    return sns_service_info["sns_service_id"]
 
 
 @router.post("/kakao/connect")
@@ -56,6 +60,17 @@ def connect_user_to_kakao(
     social_auth_instance.save()
 
     return social_auth_instance
+
+
+@router.post("/kakao/register")
+def register_with_kakao(
+    user: CreateSocialUserSchema, sns_service_id=Depends(get_kakao_sns_service_id)
+):
+    user_instance = create_social_user(
+        user=user, sns_service_id=sns_service_id, platform="kakao"
+    )
+    # TODO 중복 계정 체크 추가
+    return user_instance
 
 
 @router.post("/kakao/login")
