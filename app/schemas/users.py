@@ -1,14 +1,17 @@
 from pydantic import BaseModel
 
 
-class UserBase(BaseModel):
+class UserSchemaBase(BaseModel):
     email: str
 
 
-class UserCreate(UserBase):
+class CreateUserSchema(UserSchemaBase):
     password: str
 
 
-class User(UserBase):
+class GetUserSchema(UserSchemaBase):
     id: int
-    is_active: bool = False
+    is_active: bool
+
+    class Config:
+        orm_mode = True
