@@ -6,8 +6,7 @@ from app.databases.session import db
 
 @db.db_connect
 def create_user(user: CreateUserSchema):
-    hashed_password = make_password(user.password)
-    user_instance = User(email=user.email, password=hashed_password)
+    user_instance = User(email=user.email, password=user.password)
     user_instance.save()
     return user_instance
 

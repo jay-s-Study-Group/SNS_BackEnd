@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 from app.schemas import GetUserSchema, CreateUserSchema
 from app.crud import get_user_by_id, create_user
+from app.utils.hashers import make_password
 
 router = APIRouter()
 
@@ -13,4 +14,5 @@ def get_user(user_id: int):
 
 @router.post("/", response_model=GetUserSchema)
 def register(user: CreateUserSchema):
+    user.password = make_password(user.password)
     return create_user(user)
