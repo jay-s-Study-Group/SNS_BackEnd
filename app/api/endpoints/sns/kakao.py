@@ -1,21 +1,27 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Header
 from fastapi.responses import JSONResponse
+from typing import Any
 from app.utils.authentication import (
-    get_kakao_user_info,
+    jwt_decode_handler,
     get_kakao_access_token,
     jwt_payload_handler,
     jwt_encode_handler,
 )
 from app.utils.config import load_config
-from app.crud.sns import get_user_by_sns_service_id
-from app.models.users import SocialAuth
+from app.crud.sns import (
+    get_user_by_sns_service_id,
+    create_social_user,
+    create_social_auth,
+)
+from app.crud.users import get_user_by_email
+from app.schemas.users import CreateSocialUserSchema, SNSServiceInfoSchema
 
 SETTINGS = load_config()
 
 router = APIRouter()
 
 
-@router.get("/kakao/login_url")
+@router.get("/kakao/login-url")
 def get_social_oauth_link_list():
     return {
         "login_url": "https://kauth.kakao.com/oauth/authorize?client_id={0}&response_type=code&redirect_uri={1}".format(
@@ -25,35 +31,37 @@ def get_social_oauth_link_list():
 
 
 @router.get("/kakao/access-token")
-def kakao_oauth_redirect(code: str):  # TODO: kakao login pydantic form 추가
+def kakao_oauth_redirect(code: str) -> Any:
     access_token = get_kakao_access_token(code)
     return {"access_token": access_token}
 
 
-def get_current_user(token: str):  # TODO
+def get_current_user(authorization: str = Header(None)):
     pass
 
 
-def get_kakao_sns_service_id(access_token: str):  # TODO
+def get_kakao_sns_service_id(sns_service_info: SNSServiceInfoSchema):
     pass
 
 
-@router.get("/kakao/connect")
+@router.post("/kakao/connect")
 def connect_user_to_kakao(
-    user=Depends(get_current_user), sns_service_id=Depends(get_kakao_user_info)
+    user=Depends(get_current_user),
+    sns_service_id=Depends(get_kakao_sns_service_id),  # TODO : 헤더에 넣는 걸로 변경
 ):
-    social_auth_instance = SocialAuth(
+    social_auth_instance = create_social_auth(
         platform="kakao", sns_service_id=sns_service_id, user=user
     )
+    # TODO 중복 계정 체크 추가
     social_auth_instance.save()
 
     return social_auth_instance
 
 
-@router.get("/kakao/login")
-def login_with_kakao(sns_service_id: str):  # TODO
+@router.post("/kakao/login")
+def login_with_kakao(sns_service_id=Depends(get_kakao_sns_service_id)):
     user_instance = get_user_by_sns_service_id(sns_service_id)
-
+    # TODO 존재하지 않으면 회원가입 창으로 redirect 혹은 메세지
     payload = jwt_payload_handler(user_instance)
     token = jwt_encode_handler(payload)
     headers = {"Authorization": "jwt " + token}
