@@ -29,13 +29,6 @@ def jwt_payload_handler(user):
     return payload
 
 
-def get_kakao_user_info(access_token):
-    headers = {"Authorization": "Bearer " + access_token}
-    response = requests.get("https://kapi.kakao.com/v2/user/me", headers=headers)
-
-    return response.json()
-
-
 def get_kakao_access_token(code):
     data = {
         "grant_type": "authorization_code",
@@ -44,7 +37,6 @@ def get_kakao_access_token(code):
         "code": code,
     }
     response = requests.post("https://kauth.kakao.com/oauth/token", data=data)
-    print(response.status_code)
     if response.status_code in (400, 401):
         raise Exception(response.text)  # TODO: 직접 만든 exception 모듈로 교체
     token_info = response.json()
