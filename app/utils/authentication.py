@@ -29,7 +29,7 @@ def jwt_payload_handler(user):
     return payload
 
 
-def get_kakao_access_token(code):
+def get_kakao_access_token(code):  # TODO : core 부분으로 분리
     data = {
         "grant_type": "authorization_code",
         "client_id": CONFIG.KAKAO_API_CLIENT_ID,
@@ -42,6 +42,13 @@ def get_kakao_access_token(code):
     token_info = response.json()
     access_token = token_info["access_token"]
     return access_token
+
+
+def get_kakao_user_info(oauth_token):  # TODO: status가 200이 아닐 경우 에러 핸들링
+    headers = {"Authorization": "Bearer " + oauth_token}
+    response = requests.get("https://kapi.kakao.com/v2/user/me", headers=headers)
+
+    return response.json()
 
 
 class BaseAuthentication:
