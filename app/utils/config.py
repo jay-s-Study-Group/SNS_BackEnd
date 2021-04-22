@@ -22,7 +22,7 @@ class Config:
     JWT_ALGORITHM: str = environ.get("JWT_ALGORITHM", "HS256")
     KAKAO_API_CLIENT_ID: str = environ.get("KAKAO_API_CLIENT_ID")
     KAKAO_OAUTH_REDIRECT_URI: str = environ.get(
-        "KAKAO_OAUTH_REDIRECT_URI", "http://127.0.0.1:3052/sns/kakao/access-token"
+        "KAKAO_OAUTH_REDIRECT_URI", "http://127.0.0.1:3052/sns/kakao/oauth-token"
     )
     WEB_SERVER_PORT: int = int(environ.get("WEB_SERVER_PORT", 3052))
 
