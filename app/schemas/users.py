@@ -21,5 +21,9 @@ class GetUserSchema(UserSchemaBase):
         orm_mode = True
 
 
+class SNSLoginSchema(BaseModel):
+    oauth_token: str
+
+
 class SNSServiceInfoSchema(BaseModel):
     sns_service_id: str
