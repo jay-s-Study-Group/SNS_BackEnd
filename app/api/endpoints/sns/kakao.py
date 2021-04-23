@@ -37,9 +37,9 @@ def kakao_oauth_redirect(code: str) -> Any:
 
 def get_current_user(authorization: str = Header(None)):
     if token := authorization.split()[0] not in ("jwt", "JWT"):
-        raise HTTPException(status_code=400)
+        raise HTTPException(status_code=403)
     decoded_payload = jwt_decode_handler(token)
-    user_instance = get_user_by_email(decoded_payload["email"])
+    user_instance = User.filter(User.email == decoded_payload["email"]).first()
     return user_instance
 
 
