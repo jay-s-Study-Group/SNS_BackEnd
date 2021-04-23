@@ -31,8 +31,8 @@ def get_social_oauth_link_list():
 
 @router.get("/kakao/oauth-token")
 def kakao_oauth_redirect(code: str) -> Any:
-    access_token = get_kakao_access_token(code)
-    return {"oauth_token": access_token}
+    access_token = KAKAOOAuthController().get_oauth_token(code)
+    return JSONResponse(content={"oauth_token": access_token}, status_code=200)
 
 
 def get_current_user(authorization: str = Header(None)):
