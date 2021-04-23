@@ -18,3 +18,6 @@ class SocialAuth(MySQLModel):
     user = pw.ForeignKeyField(User, backref="social_auth_info")
     platform = pw.ForeignKeyField(SocialPlatform, backref="social_auth_info")
     sns_service_id = pw.CharField(max_length=100, unique=True)
+
+    class Meta:
+        primary_key = pw.CompositeKey("platform", "sns_service_id")
