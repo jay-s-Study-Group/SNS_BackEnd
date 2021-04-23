@@ -25,11 +25,8 @@ router = APIRouter()
 
 @router.get("/kakao/login-url")
 def get_social_oauth_link_list():
-    return {
-        "login_url": "https://kauth.kakao.com/oauth/authorize?client_id={0}&response_type=code&redirect_uri={1}".format(
-            SETTINGS.KAKAO_API_CLIENT_ID, SETTINGS.KAKAO_OAUTH_REDIRECT_URI
-        )
-    }
+    login_url = KAKAOOAuthController().get_login_url()
+    return JSONResponse(content={"login_url": login_url}, status_code=200)
 
 
 @router.get("/kakao/oauth-token")
