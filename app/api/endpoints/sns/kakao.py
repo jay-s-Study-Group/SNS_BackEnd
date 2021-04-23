@@ -1,22 +1,13 @@
-from fastapi import APIRouter, Depends, Header
+from fastapi import APIRouter, Depends, Header, Body
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import HTTPException
 from typing import Any
 from app.utils.authentication import (
     jwt_decode_handler,
-    get_kakao_access_token,
-    jwt_payload_handler,
-    jwt_encode_handler,
-    get_kakao_user_info,
 )
+from app.controllers.sns import KAKAOOAuthController
 from app.utils.config import load_config
-from app.crud.sns import (
-    get_user_by_sns_service_id,
-    create_social_user,
-    create_social_auth,
-)
-from app.crud.users import get_user_by_email
-from app.schemas.users import CreateSocialUserSchema, SNSLoginSchema
+from app.models.users import User
 
 SETTINGS = load_config()
 
@@ -43,44 +34,34 @@ def get_current_user(authorization: str = Header(None)):
     return user_instance
 
 
-def get_kakao_sns_service_id(login_info: SNSLoginSchema):
-    oauth_token = login_info.oauth_token
-    user_info = get_kakao_user_info(oauth_token)
-    return user_info["id"]
+def validate_oauth_token(oauth_token: str = Body(..., embed=True)):
+    is_valid = KAKAOOAuthController().validate_oauth_token(oauth_token)
+
+    if not is_valid:
+        raise HTTPException(status_code=403, detail="oauth token is not valid")
+
+    return oauth_token
 
 
 @router.post("/kakao/connect")
 def connect_user_to_kakao(
     user=Depends(get_current_user),
-    sns_service_id=Depends(get_kakao_sns_service_id),
+    oauth_token=Depends(validate_oauth_token),
 ):
-    social_auth_instance = create_social_auth(
-        platform="kakao", sns_service_id=sns_service_id, user=user
+    social_auth_instance = KAKAOOAuthController().connect_social_login(
+        oauth_token, user
     )
-    # TODO 중복 계정 체크 추가
-    social_auth_instance.save()
-
-    return social_auth_instance
+    return JSONResponse(content=social_auth_instance.__data__, status_code=200)
 
 
 @router.post("/kakao/register")
-def register_with_kakao(
-    user: CreateSocialUserSchema, sns_service_id=Depends(get_kakao_sns_service_id)
-):
-    user_instance = create_social_user(
-        user=user, sns_service_id=sns_service_id, platform="kakao"
-    )
-    # TODO 중복 계정 체크 추가
-    return user_instance
+def register_with_kakao(oauth_token=Depends(validate_oauth_token)):
+    user_instance = KAKAOOAuthController().create_social_user(oauth_token)
+    return JSONResponse(content=user_instance.__data__, status_code=201)
 
 
 @router.post("/kakao/login")
-def login_with_kakao(sns_service_id=Depends(get_kakao_sns_service_id)):
-    user_instance = get_user_by_sns_service_id(sns_service_id)
-    if user_instance is None:
-        raise HTTPException(status_code=404, detail="Could not find user instance")
-
-    payload = jwt_payload_handler(user_instance)
-    token = jwt_encode_handler(payload)
+def login_with_kakao(oauth_token=Depends(validate_oauth_token)):
+    user, token = KAKAOOAuthController().socical_login(oauth_token)
     headers = {"Authorization": "jwt " + token}
-    return JSONResponse(headers=headers)
+    return JSONResponse(content=user.__data__, headers=headers, status_code=200)
