@@ -29,28 +29,6 @@ def jwt_payload_handler(user):
     return payload
 
 
-def get_kakao_access_token(code):  # TODO : core 부분으로 분리
-    data = {
-        "grant_type": "authorization_code",
-        "client_id": CONFIG.KAKAO_API_CLIENT_ID,
-        "redirect_uri": CONFIG.KAKAO_OAUTH_REDIRECT_URI,
-        "code": code,
-    }
-    response = requests.post("https://kauth.kakao.com/oauth/token", data=data)
-    if response.status_code in (400, 401):
-        raise Exception(response.text)  # TODO: 직접 만든 exception 모듈로 교체
-    token_info = response.json()
-    access_token = token_info["access_token"]
-    return access_token
-
-
-def get_kakao_user_info(oauth_token):  # TODO: status가 200이 아닐 경우 에러 핸들링
-    headers = {"Authorization": "Bearer " + oauth_token}
-    response = requests.get("https://kapi.kakao.com/v2/user/me", headers=headers)
-
-    return response.json()
-
-
 class BaseAuthentication:
     def authenticate(self, email, password):
         raise NotImplementedError()  # TODO: Add  error message
