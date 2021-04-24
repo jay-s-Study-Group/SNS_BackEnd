@@ -42,10 +42,10 @@ class BasePasswordHasher:
         return get_random_alphabet(12)
 
     def encode(self, raw_password, salt):
-        raise NotImplementedError()  # TODO: Add error message
+        raise NotImplementedError("You must override encode method")
 
     def verify(self, password, encoded):
-        raise NotImplementedError()  # TODO: Add error message
+        raise NotImplementedError("You must override verify method")
 
 
 class BcryptSHA256PasswordHasher(BasePasswordHasher):

@@ -31,7 +31,7 @@ def jwt_payload_handler(user):
 
 class BaseAuthentication:
     def authenticate(self, email, password):
-        raise NotImplementedError()  # TODO: Add  error message
+        raise NotImplementedError("You must override authenticate method")
 
 
 class JSONWebTokenAuthentication(BaseAuthentication):
