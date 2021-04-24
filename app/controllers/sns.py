@@ -54,14 +54,15 @@ class KAKAOOAuthController:
         kakao_user_info = self._get_kakao_user_info(oauth_token)
         sns_service_id = kakao_user_info["id"]
         credentials = {"email": kakao_user_info["kakao_account"]["email"]}
+        exist_user = User.filter(User.email == credentials["email"])
 
-        user_instance = User(**credentials)
-        user_instance.save()
-        # 유저 중복 체크
-        social_auth_instance = SocialAuth(
-            user=user_instance, sns_service_id=sns_service_id, platform=self.platform
+        if exist_user:
+            raise HTTPException(status_code=400, detail="User instance already exists")
+
+        user_instance = User.create(**credentials)
+        social_auth_instance = SocialAuth.create(
+            user=user_instance.id, sns_service_id=sns_service_id, platform=self.platform
         )
-        social_auth_instance.save()
         return user_instance
 
     def socical_login(self, oauth_token):
