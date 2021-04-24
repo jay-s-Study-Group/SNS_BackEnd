@@ -83,8 +83,14 @@ class KAKAOOAuthController:
 
         return user_instance, token
 
-    def _get_kakao_user_info(self, oauth_token):  # TODO: status가 200이 아닐 경우 에러 핸들링
+    def _get_kakao_user_info(self, oauth_token):
         headers = {"Authorization": "Bearer " + oauth_token}
         response = requests.get("https://kapi.kakao.com/v2/user/me", headers=headers)
+
+        if response.status_code not in (200,):
+            raise HTTPException(
+                status_code=400,
+                detail="Could not access to resource with received oauth token",
+            )
 
         return response.json()
