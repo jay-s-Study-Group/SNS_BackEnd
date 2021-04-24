@@ -1,4 +1,3 @@
-import requests
 import jwt
 from app.utils.config import load_config
 
@@ -12,10 +11,12 @@ def jwt_encode_handler(payload):
     return jwt.encode(dict(payload), key, algorithm)
 
 
-def jwt_decode_handler(token):
+def jwt_decode_handler(token: str):
+    token = token.encode()
     key = CONFIG.JWT_SECRET_KEY
     algorithm = CONFIG.JWT_ALGORITHM
-    return jwt.decode(token, key, algorithm)
+    decoded = jwt.decode(token, key, algorithm)
+    return decoded
 
 
 def jwt_payload_handler(user):
