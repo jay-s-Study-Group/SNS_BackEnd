@@ -26,11 +26,14 @@ def kakao_oauth_redirect(code: str) -> Any:
     return {"oauth_token": access_token}
 
 
-def get_current_user(authorization: str = Header(None)):
-    if token := authorization.split()[0] not in ("jwt", "JWT"):
+def get_current_user(authorization: str = Header(None)):  # TODO : 미들웨어 인증에서 처리
+    if not authorization:
+        raise HTTPException(status_code=400, detail="access token was not provided")
+    if authorization.split()[0] not in ("jwt", "JWT"):
         raise HTTPException(status_code=403)
-    decoded_payload = jwt_decode_handler(token)
-    user_instance = User.filter(User.email == decoded_payload["email"]).first()
+    token = authorization.split()[1]
+    decoded = jwt_decode_handler(token)
+    user_instance = User.filter(User.email == decoded["email"]).first()
     return user_instance
 
 
