@@ -5,7 +5,7 @@ from app.utils.authentication import (
     jwt_decode_handler,
 )
 from app.controllers.sns import KAKAOOAuthController
-from app.utils.config import load_config
+from core.config import load_config
 from app.models.users import User
 from app.schemas.users import GetUserSchema
 

@@ -1,7 +1,7 @@
 import requests
 from fastapi import HTTPException
 
-from app.utils.config import load_config
+from core.config import load_config
 from app.models.users import SocialAuth, User
 from utils.authentication import jwt_payload_handler, jwt_encode_handler
 

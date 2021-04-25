@@ -4,7 +4,7 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
 
-from app.utils.config import load_config
+from core.config import load_config
 from app.api import api_router
 
 CONFIG = load_config()
