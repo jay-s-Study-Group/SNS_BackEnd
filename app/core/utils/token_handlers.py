@@ -28,14 +28,3 @@ def jwt_payload_handler(user):
         # "iat": 1,  # TODO : 발급 시간 설정
     }
     return payload
-
-
-class BaseAuthentication:
-    def authenticate(self, email, password):
-        raise NotImplementedError("You must override authenticate method")
-
-
-class JSONWebTokenAuthentication(BaseAuthentication):
-    def authenticate(self, request):
-        # TODO : token 검증 후 user 인스턴스 반환
-        return

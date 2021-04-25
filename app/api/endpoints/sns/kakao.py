@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, Header, Body, Response
 from fastapi.exceptions import HTTPException
 from typing import Any
-from core.utils.authentication import (
+from core.utils.token_handlers import (
     jwt_decode_handler,
 )
 from app.controllers.sns import KAKAOOAuthController
