@@ -24,6 +24,7 @@ def jwt_payload_handler(user):
         "sub": user.email,
         # "iss" : # TODO : 발급자 설정
         "email": user.email,
+        "id": user.id,
         # "exp": 1,  # TODO : 만료 시간 설정
         # "iat": 1,  # TODO : 발급 시간 설정
     }
