@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from app.schemas import GetUserSchema, CreateUserSchema
-from app.utils.hashers import make_password
+from core.utils.hashers import make_password
 from app.controllers.users import UserController
 
 router = APIRouter()
