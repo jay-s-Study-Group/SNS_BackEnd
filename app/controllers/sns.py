@@ -30,10 +30,10 @@ class KAKAOOAuthController:
         access_token = token_info["access_token"]
         return access_token
 
-    def connect_social_login(self, oauth_token: str, user: User):
+    def connect_social_login(self, oauth_token: str, user_id: int):
         kakao_user_info = self._get_kakao_user_info(oauth_token)
         sns_service_id = kakao_user_info["id"]
-
+        user = User.filter(User.id == user_id).first()
         social_auth_instance = SocialAuth(
             platform="kakao", sns_service_id=sns_service_id, user=user
         )

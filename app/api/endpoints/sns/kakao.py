@@ -1,12 +1,8 @@
-from fastapi import APIRouter, Depends, Header, Body, Response
+from fastapi import APIRouter, Depends, Header, Body, Response, Request
 from fastapi.exceptions import HTTPException
 from typing import Any
-from core.utils.token_handlers import (
-    jwt_decode_handler,
-)
 from app.controllers.sns import KAKAOOAuthController
 from core.config import load_config
-from app.models.users import User
 from app.schemas.users import GetUserSchema
 
 SETTINGS = load_config()
@@ -26,17 +22,6 @@ def kakao_oauth_redirect(code: str) -> Any:
     return {"oauth_token": access_token}
 
 
-def get_current_user(authorization: str = Header(None)):  # TODO : 미들웨어 인증에서 처리
-    if not authorization:
-        raise HTTPException(status_code=400, detail="access token was not provided")
-    if authorization.split()[0] not in ("jwt", "JWT"):
-        raise HTTPException(status_code=403)
-    token = authorization.split()[1]
-    decoded = jwt_decode_handler(token)
-    user_instance = User.filter(User.email == decoded["email"]).first()
-    return user_instance
-
-
 def validate_oauth_token(oauth_token: str = Body(..., embed=True)):
     is_valid = KAKAOOAuthController().validate_oauth_token(oauth_token)
 
@@ -48,11 +33,11 @@ def validate_oauth_token(oauth_token: str = Body(..., embed=True)):
 
 @router.post("/kakao/connect", status_code=201)
 def connect_user_to_kakao(
-    user=Depends(get_current_user),
+    request: Request,
     oauth_token=Depends(validate_oauth_token),
 ):
     social_auth_instance = KAKAOOAuthController().connect_social_login(
-        oauth_token, user
+        oauth_token, request.user.id
     )
     return social_auth_instance.__data__
 
