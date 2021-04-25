@@ -3,7 +3,8 @@ from fastapi import FastAPI, Request
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
-
+from starlette.middleware.authentication import AuthenticationMiddleware
+from core.middlewares.authentication import JWTAuthenticationBackend
 from core.config import load_config
 from app.api import api_router
 
@@ -18,6 +19,7 @@ def create_app():
     """
     app = FastAPI()
     app.include_router(api_router)
+    app.add_middleware(AuthenticationMiddleware, backend=JWTAuthenticationBackend())
     return app
 
 
