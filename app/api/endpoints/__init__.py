@@ -1,2 +1,2 @@
 from .users import *
-from .social_auth import *
+from .sns import *
