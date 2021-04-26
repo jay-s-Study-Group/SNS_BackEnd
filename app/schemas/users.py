@@ -5,6 +5,12 @@ class UserSchemaBase(BaseModel):
     email: str
 
 
+class CurrentUser(UserSchemaBase):
+    id: int = None
+    email: str = None
+    is_active: bool = None
+
+
 class CreateUserSchema(UserSchemaBase):
     password: str
 

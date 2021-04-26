@@ -1,5 +1,5 @@
 import jwt
-from app.utils.config import load_config
+from core.config import load_config
 
 CONFIG = load_config()
 
@@ -24,18 +24,8 @@ def jwt_payload_handler(user):
         "sub": user.email,
         # "iss" : # TODO : 발급자 설정
         "email": user.email,
+        "id": user.id,
         # "exp": 1,  # TODO : 만료 시간 설정
         # "iat": 1,  # TODO : 발급 시간 설정
     }
     return payload
-
-
-class BaseAuthentication:
-    def authenticate(self, email, password):
-        raise NotImplementedError("You must override authenticate method")
-
-
-class JSONWebTokenAuthentication(BaseAuthentication):
-    def authenticate(self, request):
-        # TODO : token 검증 후 user 인스턴스 반환
-        return

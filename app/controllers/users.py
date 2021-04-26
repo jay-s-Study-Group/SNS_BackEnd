@@ -1,4 +1,4 @@
-from app.utils.hashers import make_password
+from core.utils.hashers import make_password
 from app.models.users import User
 
 

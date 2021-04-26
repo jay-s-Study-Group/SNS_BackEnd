@@ -1,5 +1,5 @@
 import peewee as pw
-from app.utils.config import load_config
+from core.config import load_config
 import functools
 
 CONFIG = load_config()
