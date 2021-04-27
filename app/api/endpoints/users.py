@@ -13,5 +13,9 @@ def get_user(user_id: int):
 
 @router.post("/register", response_model=GetUserSchema)
 def register(user: CreateUserSchema):
-    user.password = hash_password(user.password)
+    """
+    email, password로 유저를 생성합니다.
+    - **email** : user email (should be unique)
+    - **password** : user password (must be at least 8 letters long)
+    """
     return UserController().create_common_user(user.email, user.password)
