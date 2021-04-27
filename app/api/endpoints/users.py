@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from app.schemas import GetUserSchema, CreateUserSchema
-from core.utils.hashers import make_password
+from core.utils.hashers import hash_password
 from app.controllers.users import UserController
 
 router = APIRouter()
@@ -13,5 +13,5 @@ def get_user(user_id: int):
 
 @router.post("/register", response_model=GetUserSchema)
 def register(user: CreateUserSchema):
-    user.password = make_password(user.password)
+    user.password = hash_password(user.password)
     return UserController().create_common_user(user.email, user.password)

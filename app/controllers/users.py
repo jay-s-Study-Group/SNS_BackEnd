@@ -1,4 +1,4 @@
-from core.utils.hashers import make_password
+from core.utils.hashers import hash_password
 from app.models.users import User
 
 
@@ -7,7 +7,7 @@ class UserController:
         pass
 
     def create_common_user(self, email: str, password: str):
-        hashed_password = make_password(password)
+        hashed_password = hash_password(password)
         user_instance = User(email=email, password=hashed_password)
         user_instance.save()
         return user_instance

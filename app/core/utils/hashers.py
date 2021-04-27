@@ -18,7 +18,7 @@ def get_random_alphabet(length=12) -> str:
     return "".join(secrets.choice(ALPHABET) for i in range(length))
 
 
-def make_password(
+def hash_password(
     raw_password: str, salt: str = None, algorithm: str = "default"
 ) -> str:
     hasher = get_hasher(algorithm)
