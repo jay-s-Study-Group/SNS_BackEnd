@@ -23,8 +23,13 @@ def register(user: CreateUserSchema):
     return UserController().create_common_user(user.email, user.password)
 
 
-@router.post("/login", response_model=GetUserSchema)
+@router.post("/login", response_model=GetUserSchema, status_code=status.HTTP_200_OK)
 def register(response: Response, user: LocalLoginSchema):
+    """
+    email, password로 로그인을 진행합니다.
+    - **email** : user email (should be unique)
+    - **password** : user password (must be at least 8 letters long)
+    """
     user, token = UserController().local_login(user.email, user.password)
     response.headers["Authorization"] = "jwt " + token
     return user.__data__
