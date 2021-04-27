@@ -20,7 +20,9 @@ def get_kakao_login_link():
     return {"login_url": login_url}
 
 
-@router.get("/kakao/callback", response_model=GetUserSchema, status_code=200)
+@router.get(
+    "/kakao/callback", response_model=GetUserSchema, status_code=status.HTTP_200_OK
+)
 def callback_kakao(response: Response, code: str):
     """
     KAKAO 로그인의 Redirect URL 입니다.

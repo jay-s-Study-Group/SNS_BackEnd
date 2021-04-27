@@ -2,16 +2,19 @@ from fastapi import APIRouter
 from app.schemas import GetUserSchema, CreateUserSchema
 from core.utils.hashers import hash_password
 from app.controllers.users import UserController
+from starlette import status
 
 router = APIRouter()
 
 
-@router.get("/{user_id}", response_model=GetUserSchema)
+@router.get("/{user_id}", response_model=GetUserSchema, status_code=status.HTTP_200_OK)
 def get_user(user_id: int):
     return UserController().get_user_by_id(user_id)
 
 
-@router.post("/register", response_model=GetUserSchema)
+@router.post(
+    "/register", response_model=GetUserSchema, status_code=status.HTTP_201_CREATED
+)
 def register(user: CreateUserSchema):
     """
     email, password로 유저를 생성합니다.
