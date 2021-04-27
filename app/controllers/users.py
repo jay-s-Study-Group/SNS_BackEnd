@@ -1,3 +1,5 @@
+from typing import Tuple
+
 from fastapi import HTTPException
 from starlette import status
 from core.utils.hashers import hash_password, check_password
@@ -9,7 +11,7 @@ class UserController:
     def __init__(self):
         pass
 
-    def create_common_user(self, email: str, password: str):
+    def create_common_user(self, email: str, password: str) -> User:
         hashed_password = hash_password(password)
         user_instance = User.create(email=email)
         local_auth_instance = LocalAuthentication.create(
@@ -17,11 +19,11 @@ class UserController:
         )
         return user_instance
 
-    def get_user_by_id(self, user_id):
+    def get_user_by_id(self, user_id: int) -> User:
         user_instance = User.filter(User.id == user_id).first()
         return user_instance
 
-    def local_login(self, email, password):
+    def local_login(self, email: str, password: str) -> Tuple[User, str]:
         exist_user = User.filter(User.email == email).first()
         if not exist_user:
             raise HTTPException(
