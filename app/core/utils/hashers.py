@@ -62,4 +62,5 @@ class BcryptSHA256PasswordHasher(BasePasswordHasher):
 
     def verify(self, password: str, encoded: str):
         password = password.encode("utf-8")
+        encoded = encoded.encode("utf-8")
         return bcrypt.checkpw(password, encoded)
