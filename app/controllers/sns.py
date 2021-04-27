@@ -1,6 +1,6 @@
 import requests
 from fastapi import HTTPException
-
+from starlette import status
 from core.config import load_config
 from app.models.users import SocialAuthentication, User
 from core.utils.token_handlers import jwt_payload_handler, jwt_encode_handler
@@ -25,7 +25,10 @@ class KAKAOOAuthController:
             "code": code,
         }
         response = requests.post("https://kauth.kakao.com/oauth/token", data=data)
-        if response.status_code in (400, 401):
+        if response.status_code in (
+            status.HTTP_400_BAD_REQUEST,
+            status.HTTP_401_UNAUTHORIZED,
+        ):
             raise Exception(response.text)  # TODO: 직접 만든 exception 모듈로 교체
         token_info = response.json()
         access_token = token_info["access_token"]
@@ -65,7 +68,7 @@ class KAKAOOAuthController:
         response = requests.get(
             "https://kapi.kakao.com/v1/user/access_token_info", headers=headers
         )
-        if response.status_code == 200:
+        if response.status_code == status.HTTP_200_OK:
             return True
 
         return False
@@ -77,7 +80,10 @@ class KAKAOOAuthController:
         exist_user = User.filter(User.email == credentials["email"])
 
         if exist_user:
-            raise HTTPException(status_code=400, detail="User instance already exists")
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="User instance already exists",
+            )
 
         user_instance = User.create(**credentials)
         social_auth_instance = SocialAuthentication.create(
@@ -93,11 +99,15 @@ class KAKAOOAuthController:
         ).first()
         if social_auth_instance is None:
             raise HTTPException(
-                status_code=404, detail="Could not find SocialAuth instance"
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Could not find SocialAuth instance",
             )
         user_instance = User.filter(User.id == social_auth_instance.user).first()
         if user_instance is None:
-            raise HTTPException(status_code=404, detail="Could not find user instance")
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Could not find user instance",
+            )
         payload = jwt_payload_handler(user_instance)
         token = jwt_encode_handler(payload)
 
@@ -110,9 +120,9 @@ class KAKAOOAuthController:
         headers = {"Authorization": "Bearer " + oauth_token}
         response = requests.get("https://kapi.kakao.com/v2/user/me", headers=headers)
 
-        if response.status_code not in (200,):
+        if response.status_code not in (status.HTTP_200_OK,):
             raise HTTPException(
-                status_code=400,
+                status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Could not access to resource with received oauth token",
             )
         self.user_info = response.json()
