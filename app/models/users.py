@@ -6,8 +6,12 @@ MySQLModel = get_mysql_model()
 
 class User(MySQLModel):
     email = pw.CharField(max_length=256, unique=True)
-    password = pw.CharField(max_length=256)
     is_active = pw.BooleanField(default=False)
+
+
+class LocalAuthentication(MySQLModel):
+    user = pw.ForeignKeyField(User, backref="local_authentication_info")
+    password = pw.CharField(max_length=256)
 
 
 class SocialAuth(MySQLModel):
