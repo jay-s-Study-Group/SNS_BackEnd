@@ -14,7 +14,7 @@ class LocalAuthentication(MySQLModel):
     password = pw.CharField(max_length=256)
 
 
-class SocialAuth(MySQLModel):
-    user = pw.ForeignKeyField(User, backref="social_auth_info")
+class SocialAuthentication(MySQLModel):
+    user = pw.ForeignKeyField(User, backref="provider_authentication_info")
     platform = pw.CharField(max_length=30)
     sns_service_id = pw.CharField(max_length=100, unique=True)

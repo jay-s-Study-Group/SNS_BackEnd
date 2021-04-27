@@ -2,7 +2,7 @@ import requests
 from fastapi import HTTPException
 
 from core.config import load_config
-from app.models.users import SocialAuth, User
+from app.models.users import SocialAuthentication, User
 from core.utils.token_handlers import jwt_payload_handler, jwt_encode_handler
 
 CONFIG = load_config()
@@ -40,10 +40,10 @@ class KAKAOOAuthController:
         if not exists_user:
             exists_user = self.create_social_user(oauth_token)
 
-        exists_social_auth = SocialAuth.filter(
-            SocialAuth.platform == self.platform,
-            SocialAuth.sns_service_id == sns_service_id,
-            SocialAuth.user == exists_user.id,
+        exists_social_auth = SocialAuthentication.filter(
+            SocialAuthentication.platform == self.platform,
+            SocialAuthentication.sns_service_id == sns_service_id,
+            SocialAuthentication.user == exists_user.id,
         ).first()
 
         if not exists_social_auth:
@@ -55,7 +55,7 @@ class KAKAOOAuthController:
         kakao_user_info = self._get_kakao_user_info(oauth_token)
         sns_service_id = kakao_user_info["id"]
 
-        social_auth_instance = SocialAuth.create(
+        social_auth_instance = SocialAuthentication.create(
             user=user_id, sns_service_id=sns_service_id, platform=self.platform
         )
         return social_auth_instance
@@ -80,7 +80,7 @@ class KAKAOOAuthController:
             raise HTTPException(status_code=400, detail="User instance already exists")
 
         user_instance = User.create(**credentials)
-        social_auth_instance = SocialAuth.create(
+        social_auth_instance = SocialAuthentication.create(
             user=user_instance.id, sns_service_id=sns_service_id, platform=self.platform
         )
         return user_instance
@@ -88,8 +88,8 @@ class KAKAOOAuthController:
     def social_login(self, oauth_token):
         kakao_user_info = self._get_kakao_user_info(oauth_token)
         sns_service_id = kakao_user_info["id"]
-        social_auth_instance = SocialAuth.filter(
-            SocialAuth.sns_service_id == sns_service_id
+        social_auth_instance = SocialAuthentication.filter(
+            SocialAuthentication.sns_service_id == sns_service_id
         ).first()
         if social_auth_instance is None:
             raise HTTPException(
