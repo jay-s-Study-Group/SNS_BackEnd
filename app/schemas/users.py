@@ -21,3 +21,8 @@ class GetUserSchema(UserSchemaBase):
 
     class Config:
         orm_mode = True
+
+
+class LocalLoginSchema(BaseModel):
+    email: str
+    password: str
