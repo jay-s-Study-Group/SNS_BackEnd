@@ -1,8 +1,9 @@
 import requests
+from typing import Tuple
 from fastapi import HTTPException
 from starlette import status
 from core.config import load_config
-from app.models.users import SocialAuth, User
+from app.models.users import SocialAuthentication, User
 from core.utils.token_handlers import jwt_payload_handler, jwt_encode_handler
 
 CONFIG = load_config()
@@ -12,12 +13,12 @@ class KAKAOOAuthController:
     platform = "kakao"
     user_info = None
 
-    def get_login_url(self):
+    def get_login_url(self) -> str:
         return "https://kauth.kakao.com/oauth/authorize?client_id={0}&response_type=code&redirect_uri={1}".format(
             CONFIG.KAKAO_API_CLIENT_ID, CONFIG.KAKAO_OAUTH_REDIRECT_URI
         )
 
-    def get_oauth_token(self, code):
+    def get_oauth_token(self, code) -> str:
         data = {
             "grant_type": "authorization_code",
             "client_id": CONFIG.KAKAO_API_CLIENT_ID,
@@ -34,7 +35,7 @@ class KAKAOOAuthController:
         access_token = token_info["access_token"]
         return access_token
 
-    def callback_process(self, oauth_token: str):
+    def callback_process(self, oauth_token: str) -> Tuple[User, str]:
         user_info = self._get_kakao_user_info(oauth_token)
         user_email = user_info["kakao_account"]["email"]
         sns_service_id = user_info["id"]
@@ -43,10 +44,10 @@ class KAKAOOAuthController:
         if not exists_user:
             exists_user = self.create_social_user(oauth_token)
 
-        exists_social_auth = SocialAuth.filter(
-            SocialAuth.platform == self.platform,
-            SocialAuth.sns_service_id == sns_service_id,
-            SocialAuth.user == exists_user.id,
+        exists_social_auth = SocialAuthentication.filter(
+            SocialAuthentication.platform == self.platform,
+            SocialAuthentication.sns_service_id == sns_service_id,
+            SocialAuthentication.user == exists_user.id,
         ).first()
 
         if not exists_social_auth:
@@ -54,11 +55,13 @@ class KAKAOOAuthController:
 
         return self.social_login(oauth_token)
 
-    def connect_social_login(self, oauth_token: str, user_id: int):
+    def connect_social_login(
+        self, oauth_token: str, user_id: int
+    ) -> SocialAuthentication:
         kakao_user_info = self._get_kakao_user_info(oauth_token)
         sns_service_id = kakao_user_info["id"]
 
-        social_auth_instance = SocialAuth.create(
+        social_auth_instance = SocialAuthentication.create(
             user=user_id, sns_service_id=sns_service_id, platform=self.platform
         )
         return social_auth_instance
@@ -73,7 +76,7 @@ class KAKAOOAuthController:
 
         return False
 
-    def create_social_user(self, oauth_token: str):
+    def create_social_user(self, oauth_token: str) -> User:
         kakao_user_info = self._get_kakao_user_info(oauth_token)
         sns_service_id = kakao_user_info["id"]
         credentials = {"email": kakao_user_info["kakao_account"]["email"]}
@@ -86,16 +89,16 @@ class KAKAOOAuthController:
             )
 
         user_instance = User.create(**credentials)
-        social_auth_instance = SocialAuth.create(
+        social_auth_instance = SocialAuthentication.create(
             user=user_instance.id, sns_service_id=sns_service_id, platform=self.platform
         )
         return user_instance
 
-    def social_login(self, oauth_token):
+    def social_login(self, oauth_token) -> Tuple[User, str]:
         kakao_user_info = self._get_kakao_user_info(oauth_token)
         sns_service_id = kakao_user_info["id"]
-        social_auth_instance = SocialAuth.filter(
-            SocialAuth.sns_service_id == sns_service_id
+        social_auth_instance = SocialAuthentication.filter(
+            SocialAuthentication.sns_service_id == sns_service_id
         ).first()
         if social_auth_instance is None:
             raise HTTPException(
@@ -113,7 +116,7 @@ class KAKAOOAuthController:
 
         return user_instance, token
 
-    def _get_kakao_user_info(self, oauth_token):
+    def _get_kakao_user_info(self, oauth_token) -> dict:
         if self.user_info:
             return self.user_info
 
