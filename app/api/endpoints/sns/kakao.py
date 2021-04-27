@@ -22,11 +22,3 @@ def callback_kakao(response: Response, code: str):
     user, token = KAKAOOAuthController().callback_process(oauth_token)
     response.headers["Authorization"] = "jwt " + token
     return user.__data__
-
-
-@router.get("/kakao/callback", response_model=GetUserSchema, status_code=200)
-def callback_kakao(response: Response, code: str):
-    oauth_token = KAKAOOAuthController().get_oauth_token(code)
-    user, token = KAKAOOAuthController().callback_process(oauth_token)
-    response.headers["Authorization"] = "jwt " + token
-    return user.__data__
