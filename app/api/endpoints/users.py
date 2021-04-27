@@ -1,6 +1,5 @@
-from fastapi import APIRouter
-from app.schemas import GetUserSchema, CreateUserSchema
-from core.utils.hashers import hash_password
+from fastapi import APIRouter, Response
+from app.schemas import GetUserSchema, CreateUserSchema, LocalLoginSchema
 from app.controllers.users import UserController
 from starlette import status
 
@@ -22,3 +21,10 @@ def register(user: CreateUserSchema):
     - **password** : user password (must be at least 8 letters long)
     """
     return UserController().create_common_user(user.email, user.password)
+
+
+@router.post("/login", response_model=GetUserSchema)
+def register(response: Response, user: LocalLoginSchema):
+    user, token = UserController().local_login(user.email, user.password)
+    response.headers["Authorization"] = "jwt " + token
+    return user.__data__
