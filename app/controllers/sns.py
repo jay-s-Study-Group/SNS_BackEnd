@@ -10,6 +10,7 @@ CONFIG = load_config()
 
 class KAKAOOAuthController:
     platform = "kakao"
+    user_info = None
 
     def get_login_url(self):
         return "https://kauth.kakao.com/oauth/authorize?client_id={0}&response_type=code&redirect_uri={1}".format(
@@ -30,14 +31,33 @@ class KAKAOOAuthController:
         access_token = token_info["access_token"]
         return access_token
 
+    def callback_process(self, oauth_token: str):
+        user_info = self._get_kakao_user_info(oauth_token)
+        user_email = user_info["kakao_account"]["email"]
+        sns_service_id = user_info["id"]
+
+        exists_user = User.filter(User.email == user_email).first()
+        if not exists_user:
+            exists_user = self.create_social_user(oauth_token)
+
+        exists_social_auth = SocialAuth.filter(
+            SocialAuth.platform == self.platform,
+            SocialAuth.sns_service_id == sns_service_id,
+            SocialAuth.user == exists_user.id,
+        ).first()
+
+        if not exists_social_auth:
+            self.connect_social_login(oauth_token, exists_user.id)
+
+        return self.social_login(oauth_token)
+
     def connect_social_login(self, oauth_token: str, user_id: int):
         kakao_user_info = self._get_kakao_user_info(oauth_token)
         sns_service_id = kakao_user_info["id"]
-        user = User.filter(User.id == user_id).first()
-        social_auth_instance = SocialAuth(
-            platform="kakao", sns_service_id=sns_service_id, user=user
+
+        social_auth_instance = SocialAuth.create(
+            user=user_id, sns_service_id=sns_service_id, platform=self.platform
         )
-        social_auth_instance.save()
         return social_auth_instance
 
     def validate_oauth_token(self, oauth_token: str) -> bool:
@@ -65,7 +85,7 @@ class KAKAOOAuthController:
         )
         return user_instance
 
-    def socical_login(self, oauth_token):
+    def social_login(self, oauth_token):
         kakao_user_info = self._get_kakao_user_info(oauth_token)
         sns_service_id = kakao_user_info["id"]
         social_auth_instance = SocialAuth.filter(
@@ -84,6 +104,9 @@ class KAKAOOAuthController:
         return user_instance, token
 
     def _get_kakao_user_info(self, oauth_token):
+        if self.user_info:
+            return self.user_info
+
         headers = {"Authorization": "Bearer " + oauth_token}
         response = requests.get("https://kapi.kakao.com/v2/user/me", headers=headers)
 
@@ -92,5 +115,5 @@ class KAKAOOAuthController:
                 status_code=400,
                 detail="Could not access to resource with received oauth token",
             )
-
+        self.user_info = response.json()
         return response.json()
