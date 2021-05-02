@@ -30,7 +30,7 @@ class KAKAOOAuthController:
             status.HTTP_400_BAD_REQUEST,
             status.HTTP_401_UNAUTHORIZED,
         ):
-            raise Exception(response.text)  # TODO: 직접 만든 exception 모듈로 교체
+            raise ex.ExternalEx(status_code=response.status_code, text=response.text)
         token_info = response.json()
         access_token = token_info["access_token"]
         return access_token

@@ -97,6 +97,16 @@ class AleadyRegisterEx(APIException):
             ex=ex,
         )
 
+class ExternalEx(APIException):
+    def __init__(self, status_code: int = None, text: str = None, ex: Exception = None):
+        super().__init__(
+            status_code=status_code,
+            msg=text,
+            detail=text,
+            code=f"{status_code}{'1'.zfill(4)}",
+            ex=ex,
+        )
+
 class DeleteUserEx(APIException):
     def __init__(self, email: int = None, ex: Exception = None):
         super().__init__(
