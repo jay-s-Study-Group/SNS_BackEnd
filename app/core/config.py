@@ -20,7 +20,7 @@ class Config:
     TEST_MODE: bool = False
     JWT_SECRET_KEY: str = environ.get("JWT_SECRET_KEY", "thisissecretkey!@#$")
     JWT_ALGORITHM: str = environ.get("JWT_ALGORITHM", "HS256")
-    SLACK_TOKEN = 'xoxb-1929181904582-2022675902579-guhXW4SpKTa2XapvjRGwgBiR'
+    SLACK_TOKEN = 'xoxb-1929181904582-2022675902579-uKcQHJvgKzPacxXh2dOUcrma'
     KAKAO_API_CLIENT_ID: str = environ.get("KAKAO_API_CLIENT_ID")
     KAKAO_OAUTH_REDIRECT_URI: str = environ.get(
         "KAKAO_OAUTH_REDIRECT_URI", "http://127.0.0.1:3052/sns/kakao/oauth-token"
@@ -38,7 +38,7 @@ class LocalConfig(Config):
     DATABASE_PASSWD = environ.get("LOCAL_DB_PASSWORD", "")
     DATABASE_USER = environ.get("LOCAL_DB_USER", "root")
     DATABASE_PORT = int(environ.get("LOCAL_DB_PORT", 3306))
-    SLACK_TOKEN = 'xoxb-1929181904582-2022675902579-guhXW4SpKTa2XapvjRGwgBiR'
+    SLACK_TOKEN = 'xoxb-1929181904582-2022675902579-uKcQHJvgKzPacxXh2dOUcrma'
     PROJ_RELOAD = True
     TRUSTED_HOSTS = ["*"]
     ALLOW_SITE = ["*"]
