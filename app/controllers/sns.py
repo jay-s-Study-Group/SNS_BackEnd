@@ -5,6 +5,7 @@ from starlette import status
 from core.config import load_config
 from app.models.users import SocialAuthentication, User
 from core.utils.token_handlers import jwt_payload_handler, jwt_encode_handler
+from app.core.utils import exceptions as ex
 
 CONFIG = load_config()
 
