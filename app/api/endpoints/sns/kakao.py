@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Response
 
 from app.controllers.sns import KAKAOOAuthController
-from core.config import load_config
+from app.core.config import load_config
 from app.schemas.users import GetUserSchema
 from app.schemas.sns import LoginURLSchema
 from starlette import status
