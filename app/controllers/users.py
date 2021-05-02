@@ -2,9 +2,9 @@ from typing import Tuple
 
 from fastapi import HTTPException
 from starlette import status
-from core.utils.hashers import hash_password, check_password
+from app.core.utils.hashers import hash_password, check_password
 from app.models.users import User, LocalAuthentication
-from core.utils.token_handlers import jwt_payload_handler, jwt_encode_handler
+from app.core.utils.token_handlers import jwt_payload_handler, jwt_encode_handler
 
 
 class UserController:

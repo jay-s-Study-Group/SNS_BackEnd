@@ -1,5 +1,5 @@
 import peewee as pw
-from .base import get_mysql_model
+from app.models.base import get_mysql_model
 
 MySQLModel = get_mysql_model()
 

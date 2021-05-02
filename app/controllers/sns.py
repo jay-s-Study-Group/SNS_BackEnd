@@ -2,9 +2,9 @@ import requests
 from typing import Tuple
 from fastapi import HTTPException
 from starlette import status
-from core.config import load_config
+from app.core.config import load_config
 from app.models.users import SocialAuthentication, User
-from core.utils.token_handlers import jwt_payload_handler, jwt_encode_handler
+from app.core.utils.token_handlers import jwt_payload_handler, jwt_encode_handler
 from app.core.utils import exceptions as ex
 
 CONFIG = load_config()
@@ -56,9 +56,7 @@ class KAKAOOAuthController:
 
         return self.social_login(oauth_token)
 
-    def connect_social_login(
-        self, oauth_token: str, user_id: int
-    ) -> SocialAuthentication:
+    def connect_social_login(self, oauth_token: str, user_id: int) -> SocialAuthentication:
         kakao_user_info = self._get_kakao_user_info(oauth_token)
         sns_service_id = kakao_user_info["id"]
 
@@ -69,9 +67,7 @@ class KAKAOOAuthController:
 
     def validate_oauth_token(self, oauth_token: str) -> bool:
         headers = {"Authorization": "Bearer " + oauth_token}
-        response = requests.get(
-            "https://kapi.kakao.com/v1/user/access_token_info", headers=headers
-        )
+        response = requests.get("https://kapi.kakao.com/v1/user/access_token_info", headers=headers)
         if response.status_code == status.HTTP_200_OK:
             return True
 

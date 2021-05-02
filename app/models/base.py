@@ -1,5 +1,5 @@
 import peewee as pw
-from core.databases import db
+from app.core.databases import db
 
 
 class MySQLModel(pw.Model):
