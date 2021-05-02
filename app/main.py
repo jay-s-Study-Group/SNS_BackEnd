@@ -4,8 +4,8 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
 from starlette.middleware.authentication import AuthenticationMiddleware
-from core.middlewares.authentication import JWTAuthenticationBackend
-from core.config import load_config
+from app.core.middlewares.authentication import JWTAuthenticationBackend
+from app.core.config import load_config
 from app.api import api_router
 
 CONFIG = load_config()
