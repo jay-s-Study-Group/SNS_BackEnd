@@ -9,6 +9,7 @@ from starlette.middleware.authentication import (
 from starlette.requests import HTTPConnection
 from app.schemas.users import CurrentUser
 from app.core.utils.token_handlers import jwt_decode_handler
+from app.core.middlewares.api_logger import api_logger
 
 
 class JWTAuthenticationBackend(AuthenticationBackend):
