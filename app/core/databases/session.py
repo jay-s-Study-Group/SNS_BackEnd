@@ -32,7 +32,9 @@ class PeeweeDBConnection:
         return wrapper
 
     def create_tables(self, tables):
-        uncreated_tables = [table for table in tables if not self._session.table_exists(table)]
+        uncreated_tables = [
+            table for table in tables if not self._session.table_exists(table)
+        ]
         self._session.create_tables(uncreated_tables)
 
 

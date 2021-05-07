@@ -56,7 +56,9 @@ class KAKAOOAuthController:
 
         return self.social_login(oauth_token)
 
-    def connect_social_login(self, oauth_token: str, user_id: int) -> SocialAuthentication:
+    def connect_social_login(
+        self, oauth_token: str, user_id: int
+    ) -> SocialAuthentication:
         kakao_user_info = self._get_kakao_user_info(oauth_token)
         sns_service_id = kakao_user_info["id"]
 
@@ -67,7 +69,9 @@ class KAKAOOAuthController:
 
     def validate_oauth_token(self, oauth_token: str) -> bool:
         headers = {"Authorization": "Bearer " + oauth_token}
-        response = requests.get("https://kapi.kakao.com/v1/user/access_token_info", headers=headers)
+        response = requests.get(
+            "https://kapi.kakao.com/v1/user/access_token_info", headers=headers
+        )
         if response.status_code == status.HTTP_200_OK:
             return True
 

@@ -53,7 +53,6 @@ class StatusCode:
     HTTP_511_NETWORK_AUTHENTICATION_REQUIRED = 511
 
 
-
 class APIException(Exception):
     status_code: int
     code: str
@@ -69,13 +68,14 @@ class APIException(Exception):
         msg: str = None,
         detail: str = None,
         ex: Exception = None,
-        ):
+    ):
         self.status_code = status_code
         self.code = code
         self.obj = obj
         self.msg = msg
         self.detail = detail
         super().__init__(ex)
+
 
 class NotFoundUserEx(APIException):
     def __init__(self, token: str = None, ex: Exception = None):
@@ -87,6 +87,7 @@ class NotFoundUserEx(APIException):
             ex=ex,
         )
 
+
 class AleadyRegisterEx(APIException):
     def __init__(self, email: int = None, ex: Exception = None):
         super().__init__(
@@ -96,6 +97,7 @@ class AleadyRegisterEx(APIException):
             code=f"{StatusCode.HTTP_503_SERVICE_UNAVAILABLE}{'1'.zfill(4)}",
             ex=ex,
         )
+
 
 class ExternalEx(APIException):
     def __init__(self, status_code: int = None, text: str = None, ex: Exception = None):
@@ -107,6 +109,7 @@ class ExternalEx(APIException):
             ex=ex,
         )
 
+
 class DeleteUserEx(APIException):
     def __init__(self, email: int = None, ex: Exception = None):
         super().__init__(
@@ -116,6 +119,7 @@ class DeleteUserEx(APIException):
             code=f"{StatusCode.HTTP_503_SERVICE_UNAVAILABLE}{'1'.zfill(4)}",
             ex=ex,
         )
+
 
 class NotAllowedTokenEx(APIException):
     def __init__(self, email: int = None, ex: Exception = None):

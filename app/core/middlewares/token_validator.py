@@ -16,8 +16,10 @@ from app.core.middlewares.api_logger import api_logger
 EXCEPT_PATH_REGEX = "^(/docs|/redoc|/api/auth)"
 EXCEPT_PATH_LIST = ["/", "/openapi.json"]
 
+
 def to_dict(data):
-    return data.__dict__['__data__']
+    return data.__dict__["__data__"]
+
 
 async def access_control(request: Request, call_next):
     request.state.req_time = datetime.date.today()
@@ -26,7 +28,11 @@ async def access_control(request: Request, call_next):
     request.state.user = None
     request.state.service = None
 
-    ip = request.headers["x-forwarded-for"] if "x-forwarded-for" in request.headers.keys() else request.client.host
+    ip = (
+        request.headers["x-forwarded-for"]
+        if "x-forwarded-for" in request.headers.keys()
+        else request.client.host
+    )
     request.state.ip = ip.split(",")[0] if "," in ip else ip
     headers = request.headers
     cookies = request.cookies
@@ -68,7 +74,7 @@ async def access_control(request: Request, call_next):
         error.status_code, content = HTTP_500_INTERNAL_SERVER_ERROR, {
             "statusCode": 500,
             "error": "Bad Request",
-            "message": "잠시 후 다시 시도해 주시길 바랍니다."
+            "message": "잠시 후 다시 시도해 주시길 바랍니다.",
         }
         response = JSONResponse(status_code=error.status_code, content=content)
         try:
@@ -86,11 +92,15 @@ async def url_pattern_check(path, pattern):
         return True
     return False
 
+
 async def exception_handler(error: Exception):
     print(error)
     return error
 
+
 async def test_exception_handler(error: APIException):
-    error_dict = dict(status=error.status_code, msg=error.msg, detail=error.detail, code=error.code)
-    res = JSONResponse(status_code=error.status_code,content=error_dict)
+    error_dict = dict(
+        status=error.status_code, msg=error.msg, detail=error.detail, code=error.code
+    )
+    res = JSONResponse(status_code=error.status_code, content=error_dict)
     return res

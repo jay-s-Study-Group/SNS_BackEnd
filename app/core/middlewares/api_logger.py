@@ -7,6 +7,7 @@ from app.core.utils.slack_handlers import SlackHandler
 
 slackHandler = SlackHandler()
 
+
 async def api_logger(request: Request, response=None, error=None):
     time_format = "%Y/%m/%d %H:%M:%S"
     t = time() - request.state.start
