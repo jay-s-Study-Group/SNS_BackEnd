@@ -4,7 +4,7 @@ import bcrypt
 from functools import lru_cache
 
 
-@lru_cache
+@lru_cache(maxsize=128)
 def get_hasher(algorithm: str = "default"):
     if algorithm == "default":
         return BcryptSHA256PasswordHasher()
