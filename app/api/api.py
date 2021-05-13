@@ -1,6 +1,6 @@
 from fastapi import APIRouter
-from .endpoints import users
-from .endpoints.sns import kakao
+from app.endpoints import users
+from app.endpoints.sns import kakao
 
 api_router = APIRouter()
 
