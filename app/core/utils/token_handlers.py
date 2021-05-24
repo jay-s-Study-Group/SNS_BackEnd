@@ -1,5 +1,5 @@
 import jwt
-from core.config import load_config
+from app.core.config import load_config
 
 CONFIG = load_config()
 
