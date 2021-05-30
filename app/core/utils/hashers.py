@@ -5,7 +5,7 @@ from functools import lru_cache
 
 
 @lru_cache
-def get_hasher(algorithm="default"):
+def get_hasher(algorithm: str = "default"):
     if algorithm == "default":
         return BcryptSHA256PasswordHasher()
 
@@ -18,7 +18,9 @@ def get_random_alphabet(length=12) -> str:
     return "".join(secrets.choice(ALPHABET) for i in range(length))
 
 
-def make_password(raw_password, salt=None, algorithm="default") -> str:
+def hash_password(
+    raw_password: str, salt: str = None, algorithm: str = "default"
+) -> str:
     hasher = get_hasher(algorithm)
     if salt is None:
         salt = hasher.generate_salt()
@@ -27,7 +29,7 @@ def make_password(raw_password, salt=None, algorithm="default") -> str:
     return encoded
 
 
-def check_password(password, encoded, preferred="default") -> bool:
+def check_password(password: str, encoded: str, preferred="default") -> bool:
     hasher = get_hasher(preferred)
     is_correct = hasher.verify(password, encoded)
     return is_correct
@@ -40,10 +42,10 @@ class BasePasswordHasher:
         return get_random_alphabet(12)
 
     def encode(self, raw_password, salt):
-        raise NotImplementedError()  # TODO: Add error message
+        raise NotImplementedError("You must override encode method")
 
     def verify(self, password, encoded):
-        raise NotImplementedError()  # TODO: Add error message
+        raise NotImplementedError("You must override verify method")
 
 
 class BcryptSHA256PasswordHasher(BasePasswordHasher):
@@ -53,11 +55,12 @@ class BcryptSHA256PasswordHasher(BasePasswordHasher):
     def generate_salt(self):
         return bcrypt.gensalt(self.rounds)
 
-    def encode(self, password, salt):
+    def encode(self, password: str, salt: str):
         password = password.encode("utf-8")
         encoded = bcrypt.hashpw(password, salt)
         return encoded
 
-    def verify(self, password, encoded):
+    def verify(self, password: str, encoded: str):
         password = password.encode("utf-8")
+        encoded = encoded.encode("utf-8")
         return bcrypt.checkpw(password, encoded)

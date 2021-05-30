@@ -1,10 +1,9 @@
 from fastapi import APIRouter
-from .endpoints import users, social_auth
+from app.api.endpoints import users
+from app.api.endpoints.sns import kakao
 
 api_router = APIRouter()
 
 
 api_router.include_router(users.router, prefix="/users", tags=["users"])
-api_router.include_router(
-    social_auth.router, prefix="/social-auth", tags=["social-auth"]
-)
+api_router.include_router(kakao.router, prefix="/sns", tags=["sns"])

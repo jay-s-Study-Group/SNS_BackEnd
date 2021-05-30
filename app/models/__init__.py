@@ -1,4 +1,4 @@
 from .users import *
-from app.databases import db
+from app.core.databases import db
 
-db.create_tables([User])
+db.create_tables([User, LocalAuthentication, SocialAuthentication])
