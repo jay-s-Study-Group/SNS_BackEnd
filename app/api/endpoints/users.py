@@ -26,7 +26,7 @@ def register(user: CreateUserSchema):
 
 
 @router.post("/login", response_model=GetUserSchema, status_code=status.HTTP_200_OK)
-def register(response: Response, user: LocalLoginSchema):
+def common_login(response: Response, user: LocalLoginSchema):
     """
     `ENG subscribe: Log in with email and password.` \n
     `KOR subscribe: email, password로 로그인을 진행합니다.`
