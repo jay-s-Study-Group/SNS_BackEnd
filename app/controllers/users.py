@@ -14,16 +14,16 @@ class UserController:
     def create_common_user(self, email: str, password: str) -> User:
         hashed_password = hash_password(password)
         user_instance = User.create(email=email)
-        local_auth_instance = LocalAuthentication.create(
+        common_auth_instance = LocalAuthentication.create(
             user=user_instance.id, password=hashed_password
         )
         return user_instance
 
     def get_user_by_id(self, user_id: int) -> User:
-        user_instance = User.filter(User.id == user_id).first()
+        user_instance = User.filter(user_id).first()
         return user_instance
 
-    def local_login(self, email: str, password: str) -> Tuple[User, str]:
+    def common_login(self, email: str, password: str) -> Tuple[User, str]:
         exist_user = User.filter(User.email == email).first()
         if not exist_user:
             raise HTTPException(
@@ -31,16 +31,16 @@ class UserController:
                 detail="User instance could not find",
             )
 
-        local_auth_instance = LocalAuthentication.filter(
+        common_auth_instance = LocalAuthentication.filter(
             LocalAuthentication.user == exist_user.id
         ).first()
-        if not local_auth_instance:
+        if not common_auth_instance:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="LocalAuthentication instance could not find",
             )
 
-        if not check_password(password, local_auth_instance.password):
+        if not check_password(password, common_auth_instance.password):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="The password is incorrect",
