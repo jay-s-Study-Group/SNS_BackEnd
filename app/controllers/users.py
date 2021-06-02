@@ -23,6 +23,28 @@ class UserController:
         user_instance = User.get(User.id == user_id)
         return user_instance
 
+    def update_user(self, user_id: int, **additional_data):
+        exist_user = self.get_user_by_id(user_id)
+        if not exist_user:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="User instance could not find",
+            )
+        for key in additional_data.keys():  # additional_data가 이미 존재하는 값인지 확인
+            if key in [field.name for field in User.unique_fields]:
+                exist_unique = User.filter(
+                    getattr(User, key) == additional_data[key]
+                ).first()
+                if exist_unique:
+                    raise HTTPException(
+                        status_code=status.HTTP_400_BAD_REQUEST,
+                        detail=f"Already exist field {key}, {additional_data[key]}",
+                    )
+
+        user_instance = User.update(**additional_data).where(User.id == user_id)
+        user_instance.execute()
+        return user_instance
+
     def common_login(self, email: str, password: str) -> Tuple[User, str]:
         exist_user = User.get(User.email == email)
         if not exist_user:
