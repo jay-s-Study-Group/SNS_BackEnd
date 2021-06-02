@@ -43,7 +43,7 @@ class UserController:
 
         user_instance = User.update(**additional_data).where(User.id == user_id)
         user_instance.execute()
-        return user_instance
+        return user_instance.model
 
     def common_login(self, email: str, password: str) -> Tuple[User, str]:
         exist_user = User.filter(User.email == email).first()
