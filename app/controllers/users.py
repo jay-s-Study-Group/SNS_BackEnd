@@ -20,11 +20,11 @@ class UserController:
         return user_instance
 
     def get_user_by_id(self, user_id: int) -> User:
-        user_instance = User.filter(user_id).first()
+        user_instance = User.get(User.id == user_id)
         return user_instance
 
     def common_login(self, email: str, password: str) -> Tuple[User, str]:
-        exist_user = User.filter(User.email == email).first()
+        exist_user = User.get(User.email == email)
         if not exist_user:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
