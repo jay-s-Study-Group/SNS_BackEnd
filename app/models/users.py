@@ -11,7 +11,6 @@ class MentoringField(MySQLModel):
 class User(MySQLModel):
     email = pw.CharField(max_length=256, unique=True)
     name = pw.CharField(max_length=128)
-    mentoring_field = pw.CharField(max_length=128)
     self_introduction = pw.CharField(max_length=256)
     phone_number = pw.CharField(max_length=128)
     profile_url = pw.CharField(max_length=256)
