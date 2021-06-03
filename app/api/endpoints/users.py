@@ -39,7 +39,7 @@ def common_login(response: Response, user: LocalLoginSchema):
     - **email** : str = user email (should be unique)
     - **password** : str = user password (must be at least 8 letters long)
     """
-    user, token = UserController().local_login(user.email, user.password)
+    user, token = UserController().common_login(user.email, user.password)
     response.headers["Authorization"] = "jwt " + token
     return user.__data__
 
