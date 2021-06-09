@@ -4,9 +4,22 @@ from app.models.base import get_mysql_model
 MySQLModel = get_mysql_model()
 
 
+class MentoringField(MySQLModel):
+    field = pw.CharField(max_length=128, primary_key=True)
+
+
 class User(MySQLModel):
     email = pw.CharField(max_length=256, unique=True)
+    name = pw.CharField(max_length=128)
+    self_introduction = pw.CharField(max_length=256)
+    phone_number = pw.CharField(max_length=128)
+    profile_url = pw.CharField(max_length=256)
     is_active = pw.BooleanField(default=False)
+
+
+class UserMentoringField(MySQLModel):
+    user = pw.ForeignKeyField(User, backref="mentoring_field_info")
+    mentoring_field = pw.ForeignKeyField(MentoringField, backref="user_info")
 
 
 class LocalAuthentication(MySQLModel):

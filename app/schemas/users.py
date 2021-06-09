@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import List
 
 
 class UserSchemaBase(BaseModel):
@@ -13,6 +14,14 @@ class CurrentUser(UserSchemaBase):
 
 class CreateUserSchema(UserSchemaBase):
     password: str
+
+
+class UpdateUserSchema(UserSchemaBase):
+    name: str
+    mentoring_fields: List[str]
+    self_introduction: str
+    phone_number: str
+    profile_url: str
 
 
 class GetUserSchema(UserSchemaBase):
