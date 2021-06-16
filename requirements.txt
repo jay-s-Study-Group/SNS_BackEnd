@@ -27,3 +27,4 @@ typing-extensions==3.7.4.3
 urllib3==1.26.4
 uvicorn==0.13.4
 pandas==1.2.4
+slacker==0.14.0
