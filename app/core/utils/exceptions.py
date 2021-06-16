@@ -78,11 +78,11 @@ class APIException(Exception):
         super().__init__(ex)
 
 class NotFoundUserEx(APIException):
-    def __init__(self, token: str = None, ex: Exception = None):
+    def __init__(self, user_id: str = None, ex: Exception = None):
         super().__init__(
             status_code=StatusCode.HTTP_500_INTERNAL_SERVER_ERROR,
             msg="유저 정보를 찾을 수 없습니다.",
-            detail=f"Not Found User | Token : {token}",
+            detail=f"Not Found User | Token : {user_id}",
             code=f"{StatusCode.HTTP_500_INTERNAL_SERVER_ERROR}{'1'.zfill(4)}",
             ex=ex,
         )
