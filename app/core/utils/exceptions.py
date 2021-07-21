@@ -88,7 +88,7 @@ class NotFoundUserEx(APIException):
         )
 
 class NotFoundMentoringEx(APIException):
-    def __init__(self, user_id: int = None, mentoring_id, ex: Exception = None):
+    def __init__(self, user_id: int = None, mentoring_id: int = None, ex: Exception = None):
         super().__init__(
             status_code=StatusCode.HTTP_500_INTERNAL_SERVER_ERROR,
             msg="멘토링 정보를 찾을 수 없습니다.",
@@ -98,7 +98,7 @@ class NotFoundMentoringEx(APIException):
         )
 
 class NotFoundClassTypeEx(APIException):
-    def __init__(self, user_id: int = None, class_type_name, ex: Exception = None):
+    def __init__(self, user_id: int = None, class_type_name: str = None, ex: Exception = None):
         super().__init__(
             status_code=StatusCode.HTTP_500_INTERNAL_SERVER_ERROR,
             msg="존재 하지 않는 클래스 형식입니다.",
