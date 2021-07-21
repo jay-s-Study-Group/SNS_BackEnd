@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Response
+from fastapi import APIRouter, Response, Form, File, UploadFile
 from app.schemas import (
     ApplicationMentoringSchema,
     ApplicationMentoringResponseSchema
@@ -21,3 +21,16 @@ def register(user_id: int, application_mentoring_info: ApplicationMentoringSchem
     """
     return MentoringController().register_mentoring_class(user_id, application_mentoring_info)
 
+@router.post(
+    "/classroom", response_model=ApplicationMentoringResponseSchema, status_code=status.HTTP_201_CREATED
+)
+def create_classroom(user_id: int, mentoring_id:int = Form(...), classroom_type_name: str = Form(...)
+                                            , content: str = Form(...), file: UploadFile = File(...)):
+    return MentoringController().create_classromm(user_id, mentoring_id, classroom_type_name, content,
+                                                  file)
+
+@router.get(
+    "/mentoring", response_model=ApplicationMentoringResponseSchema, status_code=status.HTTP_201_CREATED
+)
+def search_mentoring(user_id: int, mentoring_field, count=10, page=1):
+    return MentoringController().get_mentoring_info(user_id, mentoring_field, count, page)

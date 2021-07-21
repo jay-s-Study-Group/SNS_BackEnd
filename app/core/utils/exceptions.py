@@ -87,6 +87,26 @@ class NotFoundUserEx(APIException):
             ex=ex,
         )
 
+class NotFoundMentoringEx(APIException):
+    def __init__(self, user_id: int = None, mentoring_id, ex: Exception = None):
+        super().__init__(
+            status_code=StatusCode.HTTP_500_INTERNAL_SERVER_ERROR,
+            msg="멘토링 정보를 찾을 수 없습니다.",
+            detail=f"Not Found Mentoring | user_id : {user_id}, input_mentor_id : {mentoring_id}",
+            code=f"{StatusCode.HTTP_500_INTERNAL_SERVER_ERROR}{'1'.zfill(4)}",
+            ex=ex,
+        )
+
+class NotFoundClassTypeEx(APIException):
+    def __init__(self, user_id: int = None, class_type_name, ex: Exception = None):
+        super().__init__(
+            status_code=StatusCode.HTTP_500_INTERNAL_SERVER_ERROR,
+            msg="존재 하지 않는 클래스 형식입니다.",
+            detail=f"Not Exist class Form. | user_id : {user_id}, input_class_type_name : {class_type_name}",
+            code=f"{StatusCode.HTTP_500_INTERNAL_SERVER_ERROR}{'1'.zfill(4)}",
+            ex=ex,
+        )
+
 class AleadyRegisterEx(APIException):
     def __init__(self, email: int = None, ex: Exception = None):
         super().__init__(
